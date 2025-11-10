@@ -1,28 +1,40 @@
 pipeline {
-    agent { label 'windows' }
+    agent {
+        docker {
+            image 'node:18-alpine'
+            args '-u root:root' // optional: run as root to install extra packages if needed
+        }
+    }
 
     stages {
         stage('Debug') {
             steps {
-                bat 'whoami'
-                bat 'echo %PATH%'
-                bat 'node --version'
-                bat 'npm --version'
+                sh '''
+                    whoami
+                    uname -a
+                    echo $PATH
+                    node --version
+                    npm --version
+                '''
             }
         }
 
         stage('Build') {
             steps {
-                bat 'npm ci'
-                bat 'npm run build'
+                sh '''
+                    npm ci
+                    npm run build
+                    ls -la
+                '''
             }
         }
 
         stage('Test') {
             steps {
-                bat 'npm test || echo Tests failed'
+                sh '''
+                    npm test || echo "Tests failed, but pipeline continues"
+                '''
             }
         }
     }
 }
-
