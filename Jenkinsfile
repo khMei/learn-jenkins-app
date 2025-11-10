@@ -4,16 +4,18 @@ pipeline {
        stages {
         stage('Debug Host') {
           steps {
-        bat 'whoami'
-        bat 'uname -a'
-        bat 'echo $PATH'
-        bat 'which node'
+               sh'''
+                  whoami
+                 uname -a
+                echo $PATH
+                which node
+                '''
              }
           }
 
         stage('Build') {
             steps {
-                bat '''
+                sh '''
                    apk add --no-cache git openssh ca-certificates
                    update-ca-certificates
                    node --version
@@ -27,7 +29,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo 'test stage'
+               sh 'npm test || echo "Tests failed, but pipeline continues"'
             }
         }
     }
