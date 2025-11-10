@@ -1,6 +1,9 @@
 pipeline {
     agent {
-        node { label 'Built-In Node' } // Or whatever your Linux node label is
+        docker {
+            image 'node:18-alpine'
+            args '-u root:root' // optional, for permissions
+        }
     }
        stages {
         stage('Debug Host') {
