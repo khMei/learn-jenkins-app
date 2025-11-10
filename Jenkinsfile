@@ -8,6 +8,11 @@ pipeline {
     
 
     stages {
+      stage('Checkout') {
+            steps {
+                git url: 'https://github.com/khMei/learn-jenkins-app.git', branch: 'main'
+            }
+        }
         stage('Debug') {
             steps {
                 sh '''
