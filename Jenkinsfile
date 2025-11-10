@@ -1,9 +1,6 @@
 pipeline {
     agent {
-        docker {
-            image 'node:18-alpine'
-            args '-u root:root' // optional: run as root to install extra packages if needed
-        }
+        label 'docker'
     }
 
     stages {
