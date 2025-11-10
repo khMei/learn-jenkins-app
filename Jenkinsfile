@@ -6,7 +6,16 @@ pipeline {
         }
     }
 
-    stages {
+       stages {
+        stage('Debug Host') {
+          steps {
+        sh 'whoami'
+        sh 'uname -a'
+        sh 'echo $PATH'
+        sh 'which node'
+             }
+          }
+
         stage('Build') {
             steps {
                 sh '''
