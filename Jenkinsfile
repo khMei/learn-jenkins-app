@@ -1,9 +1,11 @@
 pipeline {
-    agent { label 'docker' }
-
+    agent {
+        node { label 'Built-In Node' } // Or whatever your Linux node label is
+    }
        stages {
         stage('Debug Host') {
           steps {
+              docker.image('node:18-alpine').inside {
                sh'''
                   whoami
                  uname -a
@@ -12,6 +14,7 @@ pipeline {
                 '''
              }
           }
+        }
 
         stage('Build') {
             steps {
