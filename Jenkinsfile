@@ -1,24 +1,19 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:18-alpine'
-            reuseNode true
-        }
-    }
+    agent { label 'docker' }
 
        stages {
         stage('Debug Host') {
           steps {
-        sh 'whoami'
-        sh 'uname -a'
-        sh 'echo $PATH'
-        sh 'which node'
+        bat 'whoami'
+        bat 'uname -a'
+        bat 'echo $PATH'
+        bat 'which node'
              }
           }
 
         stage('Build') {
             steps {
-                sh '''
+                bat '''
                    apk add --no-cache git openssh ca-certificates
                    update-ca-certificates
                    node --version
