@@ -1,5 +1,8 @@
 pipeline {
-   agent { label 'docker-node-git' }
+   agent {
+        docker { 
+            image 'node:18-alpine' 
+            args '-u root:root' } }
     stages {
         stage('Debug') {
             steps {
@@ -24,6 +27,12 @@ pipeline {
         }
 
         stage('Test') {
+           agent {
+              docker { 
+                  image 'node:18-alpine' 
+                  args '-u root:root' 
+              }
+           }
             steps {
                 sh '''
                     npm test || echo "Tests failed, but pipeline continues"
