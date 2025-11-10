@@ -1,18 +1,7 @@
 pipeline {
-     agent {
-        docker {
-            image 'node:18-alpine'
-            args '-u root:root'
-        }
-    }
-    
+    agent any
 
     stages {
-      stage('Checkout') {
-            steps {
-                git url: 'https://github.com/khMei/learn-jenkins-app.git', branch: 'main'
-            }
-        }
         stage('Debug') {
             steps {
                 sh '''
