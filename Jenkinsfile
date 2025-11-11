@@ -43,12 +43,12 @@ pipeline {
         }
 
         stage('Test') {
-        //     agent {
-        //         docker { 
-        //             image 'node:18-alpine' 
-        //             args '-u root:root' 
-        //         }
-        //     }
+            agent {
+                docker { 
+                    image 'node:18-alpine' 
+                    args '-u root:root' 
+                }
+            }
               steps {
         //         sh '''
         //             npm test || echo "Tests failed, but pipeline continues"
