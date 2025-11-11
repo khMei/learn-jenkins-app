@@ -53,7 +53,10 @@ pipeline {
         //         sh '''
         //             npm test || echo "Tests failed, but pipeline continues"
         //         '''
-                      echo' test stage'
+                    sh '''
+                      echo' test -f build/index.html'
+                     npm test
+          '''
           }
          }
     }
