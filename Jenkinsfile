@@ -1,22 +1,7 @@
 pipeline {
     agent any
-    // {
-    // label 'docker' }
-    // docker { 
-    //     image 'node:18-alpine' 
-    //     args '-u root:root' } 
+
     stages {
-        // stage('Debug') {
-        //     steps {
-        //         sh '''
-        //             whoami
-        //             uname -a
-        //             echo $PATH
-        //             node --version
-        //             npm --version
-        //         '''
-        //     }
-        // }
 
         stage('Build') {
             agent {
@@ -26,11 +11,6 @@ pipeline {
                 }
             }
             steps {
-                // sh '''
-                //     npm ci
-                //     npm run build
-                //     ls -la
-                // '''
                 sh '''
                     ls -la
                     node --version
@@ -42,28 +22,68 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Tests') {
+            parallel {
+                stage('Unit tests') {
+                    agent {
+                        docker {
+                            image 'node:18-alpine'
+                            reuseNode true
+                        }
+                    }
+
+                    steps {
+                        sh '''
+                            #test -f build/index.html
+                            npm test
+                        '''
+                    }
+                    post {
+                        always {
+                            junit 'jest-results/junit.xml'
+                        }
+                    }
+                }
+
+                stage('E2E') {
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            reuseNode true
+                        }
+                    }
+
+                    steps {
+                        sh '''
+                            npm install serve
+                            node_modules/.bin/serve -s build &
+                            sleep 10
+                            npx playwright test  --reporter=html
+                        '''
+                    }
+
+                    post {
+                        always {
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
             agent {
-                docker { 
-                    image 'node:18-alpine' 
+                docker {
+                    image 'node:18-alpine'
                     reuseNode true
                 }
             }
-              steps {
-        //         sh '''
-        //             npm test || echo "Tests failed, but pipeline continues"
-        //         '''
-                    sh '''
-                       test -f build/index.html 
-                       npm test
-                        '''
-
-          }
-         }
-    }
-    post{
-        always{
-            junit 'test-results/junit.xml'
+            steps {
+                sh '''
+                    npm install netlify-cli@20.1.1
+                    node_modules/.bin/netlify --version
+                '''
+            }
         }
     }
 }
