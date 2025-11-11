@@ -1,9 +1,10 @@
 pipeline {
-   agent { label 'docker' }
-       // docker { 
-         //   image 'node:18-alpine' 
-         //   args '-u root:root' 
-       // } }
+   agent { 
+      // label 'docker' }
+       docker { 
+           image 'node:18-alpine' 
+           args '-u root:root' 
+       } }
     stages {
         stage('Debug') {
             steps {
@@ -29,12 +30,13 @@ pipeline {
         }
 
         stage('Test') {
-           agent { label 'docker' }
-           //    docker { 
-           //        image 'node:18-alpine' 
-           //        args '-u root:root' 
-           //    }
-           // }
+           agent { 
+              //label 'docker' }
+              docker { 
+                  image 'node:18-alpine' 
+                  args '-u root:root' 
+              }
+           }
             steps {
                 sh '''
                     npm test || echo "Tests failed, but pipeline continues"
