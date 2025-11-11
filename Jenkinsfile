@@ -42,18 +42,19 @@ pipeline {
             }
         }
 
-        // stage('Test') {
+        stage('Test') {
         //     agent {
         //         docker { 
         //             image 'node:18-alpine' 
         //             args '-u root:root' 
         //         }
         //     }
-        //     steps {
+              steps {
         //         sh '''
         //             npm test || echo "Tests failed, but pipeline continues"
         //         '''
-        //     }
-        // }
+                      echo' test stage'
+          }
+         }
     }
 }
