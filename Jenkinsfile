@@ -1,9 +1,9 @@
 pipeline {
-   agent {
-        docker { 
-            image 'node:18-alpine' 
+   agent { label 'docker' }
+       // docker { 
+         //   image 'node:18-alpine' 
          //   args '-u root:root' 
-        } }
+       // } }
     stages {
         stage('Debug') {
             steps {
@@ -13,6 +13,7 @@ pipeline {
                     echo $PATH
                     node --version
                     npm --version
+                    docker --version
                 '''
             }
         }
@@ -28,12 +29,12 @@ pipeline {
         }
 
         stage('Test') {
-           agent {
-              docker { 
-                  image 'node:18-alpine' 
-                  args '-u root:root' 
-              }
-           }
+           agent { label 'docker' }
+           //    docker { 
+           //        image 'node:18-alpine' 
+           //        args '-u root:root' 
+           //    }
+           // }
             steps {
                 sh '''
                     npm test || echo "Tests failed, but pipeline continues"
