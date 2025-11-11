@@ -54,12 +54,8 @@ pipeline {
         //             npm test || echo "Tests failed, but pipeline continues"
         //         '''
                     sh '''
-                       if [ -f build/index.html ]; then
-                          echo "File exists!"
-                        else
-                          echo "File missing!"
-                          exit 1
-                        fi
+                       test -f build/index.html 
+                       npm test
                         '''
 
           }
